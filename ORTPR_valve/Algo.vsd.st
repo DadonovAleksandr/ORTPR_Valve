@@ -17,19 +17,19 @@ CASE StateAlgo OF
   IF (DataIn.Cmd_Stop) THEN
     StateAlgo := 40; RETURN;
   END_IF;
-  IF (((NOT(DataIn.KVO)) AND (DataIn.KVZ)) AND (DataIn.T01)) THEN
+  IF (((DataIn.T[01]) AND (NOT(DataIn.KVO))) AND (DataIn.KVZ)) THEN
     StateAlgo := 1; RETURN;
   END_IF;
   IF ((DataIn.KVZ) AND (DataIn.MPZ)) THEN
     StateAlgo := 14; RETURN;
   END_IF;
-  IF (((DataIn.KVO) AND (NOT(DataIn.KVZ))) AND (DataIn.T01)) THEN
+  IF (((DataIn.T[01]) AND (DataIn.KVO)) AND (NOT(DataIn.KVZ))) THEN
     StateAlgo := 2; RETURN;
   END_IF;
   IF ((DataIn.KVO) AND (DataIn.MPO)) THEN
     StateAlgo := 24; RETURN;
   END_IF;
-  IF (((DataIn.KVO) AND (DataIn.KVZ)) AND (DataIn.T01)) THEN
+  IF (((DataIn.T[01]) AND (DataIn.KVO)) AND (DataIn.KVZ)) THEN
     StateAlgo := 3; RETURN;
   END_IF;
 
@@ -47,7 +47,7 @@ CASE StateAlgo OF
   IF (DataIn.MPZ) THEN
     StateAlgo := 17; RETURN;
   END_IF;
-  IF (((DataIn.KVO) AND (DataIn.KVZ)) AND (DataIn.T01)) THEN
+  IF (((DataIn.T[01]) AND (DataIn.KVO)) AND (DataIn.KVZ)) THEN
     StateAlgo := 3; RETURN;
   END_IF;
 
@@ -66,7 +66,7 @@ CASE StateAlgo OF
   IF ((DataIn.Cmd_Open) AND (DataIn.Dist)) THEN
     StateAlgo := 41; RETURN;
   END_IF;
-  IF ((DataIn.T02) AND (DataIn.Dist)) THEN
+  IF ((DataIn.T[02]) AND (DataIn.Dist)) THEN
     StateAlgo := 62; RETURN;
   END_IF;
 
@@ -84,7 +84,7 @@ CASE StateAlgo OF
   IF ((DataIn.Cmd_Open) AND (DataIn.Dist)) THEN
     StateAlgo := 41; RETURN;
   END_IF;
-  IF ((DataIn.T03) AND (DataIn.Dist)) THEN
+  IF ((DataIn.T[03]) AND (DataIn.Dist)) THEN
     StateAlgo := 62; RETURN;
   END_IF;
 
@@ -102,7 +102,7 @@ CASE StateAlgo OF
   IF ((DataIn.Cmd_Open) AND (DataIn.Dist)) THEN
     StateAlgo := 41; RETURN;
   END_IF;
-  IF ((DataIn.T04) AND (DataIn.Dist)) THEN
+  IF ((DataIn.T[04]) AND (DataIn.Dist)) THEN
     StateAlgo := 62; RETURN;
   END_IF;
 
@@ -138,7 +138,7 @@ CASE StateAlgo OF
   IF (DataIn.MPZ) THEN
     StateAlgo := 27; RETURN;
   END_IF;
-  IF (((DataIn.KVO) AND (DataIn.KVZ)) AND (DataIn.T01)) THEN
+  IF (((DataIn.T[01]) AND (DataIn.KVO)) AND (DataIn.KVZ)) THEN
     StateAlgo := 3; RETURN;
   END_IF;
 
@@ -157,7 +157,7 @@ CASE StateAlgo OF
   IF ((DataIn.Cmd_Close) AND (DataIn.Dist)) THEN
     StateAlgo := 42; RETURN;
   END_IF;
-  IF ((DataIn.T02) AND (DataIn.Dist)) THEN
+  IF ((DataIn.T[02]) AND (DataIn.Dist)) THEN
     StateAlgo := 61; RETURN;
   END_IF;
 
@@ -175,7 +175,7 @@ CASE StateAlgo OF
   IF ((DataIn.Cmd_Close) AND (DataIn.Dist)) THEN
     StateAlgo := 42; RETURN;
   END_IF;
-  IF ((DataIn.T03) AND (DataIn.Dist)) THEN
+  IF ((DataIn.T[03]) AND (DataIn.Dist)) THEN
     StateAlgo := 61; RETURN;
   END_IF;
 
@@ -193,7 +193,7 @@ CASE StateAlgo OF
   IF ((DataIn.Cmd_Close) AND (DataIn.Dist)) THEN
     StateAlgo := 42; RETURN;
   END_IF;
-  IF ((DataIn.T04) AND (DataIn.Dist)) THEN
+  IF ((DataIn.T[04]) AND (DataIn.Dist)) THEN
     StateAlgo := 61; RETURN;
   END_IF;
 
@@ -223,7 +223,7 @@ CASE StateAlgo OF
   IF (DataIn.Cmd_Stop) THEN
     StateAlgo := 40; RETURN;
   END_IF;
-  IF (((NOT(DataIn.KVO)) AND (DataIn.KVZ)) AND (DataIn.T01)) THEN
+  IF (((DataIn.T[01]) AND (NOT(DataIn.KVO))) AND (DataIn.KVZ)) THEN
     StateAlgo := 1; RETURN;
   END_IF;
   IF ((DataIn.Cmd_Close) AND (DataIn.Dist)) THEN
@@ -232,7 +232,7 @@ CASE StateAlgo OF
   IF (DataIn.MPZ) THEN
     StateAlgo := 17; RETURN;
   END_IF;
-  IF (((DataIn.KVO) AND (NOT(DataIn.KVZ))) AND (DataIn.T01)) THEN
+  IF (((DataIn.T[01]) AND (DataIn.KVO)) AND (NOT(DataIn.KVZ))) THEN
     StateAlgo := 2; RETURN;
   END_IF;
   IF ((DataIn.Cmd_Open) AND (DataIn.Dist)) THEN
@@ -250,14 +250,14 @@ CASE StateAlgo OF
   DataOut.Out_Stop := TRUE;
 
   (* Условия перехода: *)
-  IF (((NOT(DataIn.MPO)) AND (NOT(DataIn.MPZ))) AND (DataIn.T08)) THEN
+  IF (((NOT(DataIn.MPO)) AND (NOT(DataIn.MPZ))) AND (DataIn.T[08])) THEN
     StateAlgo := 401; RETURN;
   END_IF;
 
 401: (* Стабилизация после стопа *)
 
   (* Условия перехода: *)
-  IF ((DataIn.T01) AND (DataIn.U)) THEN
+  IF ((DataIn.T[01]) AND (DataIn.U)) THEN
     StateAlgo := 0; RETURN;
   END_IF;
 
@@ -266,14 +266,14 @@ CASE StateAlgo OF
   DataOut.Out_Stop := TRUE;
 
   (* Условия перехода: *)
-  IF (((NOT(DataIn.MPO)) AND (NOT(DataIn.MPZ))) AND (DataIn.T08)) THEN
+  IF (((NOT(DataIn.MPO)) AND (NOT(DataIn.MPZ))) AND (DataIn.T[08])) THEN
     StateAlgo := 411; RETURN;
   END_IF;
 
 411: (* Стабилизация после стопа *)
 
   (* Условия перехода: *)
-  IF ((DataIn.T01) AND (DataIn.U)) THEN
+  IF ((DataIn.T[01]) AND (DataIn.U)) THEN
     StateAlgo := 21; RETURN;
   END_IF;
 
@@ -282,14 +282,14 @@ CASE StateAlgo OF
   DataOut.Out_Stop := TRUE;
 
   (* Условия перехода: *)
-  IF (((NOT(DataIn.MPO)) AND (NOT(DataIn.MPZ))) AND (DataIn.T08)) THEN
+  IF (((DataIn.T[08]) AND (NOT(DataIn.MPO))) AND (NOT(DataIn.MPZ))) THEN
     StateAlgo := 421; RETURN;
   END_IF;
 
 421: (* Стабилизация после стопа *)
 
   (* Условия перехода: *)
-  IF ((DataIn.T01) AND (DataIn.U)) THEN
+  IF ((DataIn.T[01]) AND (DataIn.U)) THEN
     StateAlgo := 11; RETURN;
   END_IF;
 
@@ -298,7 +298,7 @@ CASE StateAlgo OF
   DataOut.F_Error := TRUE;
 
   (* Условия перехода: *)
-  IF ((DataIn.T01) AND (DataIn.U)) THEN
+  IF ((DataIn.T[01]) AND (DataIn.U)) THEN
     StateAlgo := 666; RETURN;
   END_IF;
 
@@ -308,7 +308,7 @@ CASE StateAlgo OF
   DataOut.Out_Stop := TRUE;
 
   (* Условия перехода: *)
-  IF (DataIn.T08) THEN
+  IF (DataIn.T[08]) THEN
     StateAlgo := 460; RETURN;
   END_IF;
 
@@ -318,7 +318,7 @@ CASE StateAlgo OF
   DataOut.Out_Stop := TRUE;
 
   (* Условия перехода: *)
-  IF (DataIn.T08) THEN
+  IF (DataIn.T[08]) THEN
     StateAlgo := 460; RETURN;
   END_IF;
 
@@ -328,7 +328,7 @@ CASE StateAlgo OF
   DataOut.Out_Stop := TRUE;
 
   (* Условия перехода: *)
-  IF (DataIn.T08) THEN
+  IF (DataIn.T[08]) THEN
     StateAlgo := 460; RETURN;
   END_IF;
 
@@ -338,7 +338,7 @@ CASE StateAlgo OF
   DataOut.Out_Stop := TRUE;
 
   (* Условия перехода: *)
-  IF (DataIn.T08) THEN
+  IF (DataIn.T[08]) THEN
     StateAlgo := 460; RETURN;
   END_IF;
 
