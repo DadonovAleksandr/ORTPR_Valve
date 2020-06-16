@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='Windows-1251'?>
+<!-- ver 4 -->
+<configuration>
+	<parsers>
+		<nodes>
+			<!-- Examples: e1, e2_23, e12_get -->
+			<!--<nodeTemplate template='EVENT' regexp='(?&lt;name&gt;([-.a-zA-Z0-9,\[\]\(\)_\&lt;\&gt;\=]+))' format='#name#' name='${name}'>-->
+			<nodeTemplate template='EVENT' regexp='(?&lt;name&gt;([-.a-zA-Z0-9,\[\]_\&lt;\&gt;\=]+))' format='#name#' name='${name}'>
+				<parameter name='name' value='${name}' />
+			</nodeTemplate>
+
+			<!-- Examples: x1, x2_23, x12_equal -->
+			<nodeTemplate template='INPUT_VARIABLE' regexp='x(?&lt;name&gt;\w+)' format='x#name#' name='${name}'>
+				<parameter name='name' value='${name}' />
+			</nodeTemplate>
+
+			<!-- Examples: y12 = 10, yB2 == BB_3, y12_3 = B_12  -->
+			<!--<nodeTemplate template='OTHER_AUTOMATA_EVENT_EQUAL' regexp='(?&lt;automata&gt;\w+)(\ *)(=|==)(\ *)(?&lt;event&gt;\w+)' name='${automata}${event}' format='#automata#==#event#'>-->
+			<nodeTemplate template='OTHER_AUTOMATA_EVENT_EQUAL' regexp='(?&lt;automata&gt;\w+)(\ *)(==)(\ *)(?&lt;event&gt;\w+)' name='${automata}${event}' format='#automata#==#event#'>
+				<parameter name='automata' value='${automata}' />
+				<parameter name='event' value='${event}' />
+			</nodeTemplate>
+
+			<!-- Examples: y12 != 10, yB2 <> BB_3, y12_3 != B_12  -->
+			<!--<nodeTemplate template='OTHER_AUTOMATA_EVENT_NOTEQUAL' regexp='(?&lt;automata&gt;\w+)(\ *)(&lt;&gt;|!=)(\ *)(?&lt;event&gt;\w+)' name='${automata}${event}' format='#automata#!=#event#'>-->
+			<nodeTemplate template='OTHER_AUTOMATA_EVENT_NOTEQUAL' regexp='(?&lt;automata&gt;\w+)(\ *)(!=)(\ *)(?&lt;event&gt;\w+)' name='${automata}${event}' format='#automata#!=#event#'>
+				<parameter name='automata' value='${automata}' />
+				<parameter name='event' value='${event}' />
+			</nodeTemplate>
+
+
+			<!-- TODO!!! - этот тип не используется? -->
+			<nodeTemplate template='OUTPUT_ACTION' regexp='O_(?&lt;name&gt;\w+)' format='O_#name#' name='${name}'>
+				<parameter name='name' value='${name}' />
+			</nodeTemplate>
+
+			<!-- Выходные данные, пишется в "z: " секции. -->
+            <nodeTemplate template='SIMPLE_OUTPUT_ACTION_IN_STATE' regexp='(?&lt;name&gt;([-.a-zA-Z0-9,\[\]\(\)_\&lt;\&gt;\=]+))' format='#name#' name='${name}'>
+				<parameter name='name' value='${name}' />
+			</nodeTemplate>
+
+
+			<!-- Вызов процедуры, пишется в "A: " секции. -->
+			<nodeTemplate template='AUTOMATA_CALL' regexp='(?&lt;automata&gt;[-.a-zA-Z0-9,\[\]\(\)_\&lt;\&gt;\=]+)' format='A#automata#' name='A${automata}'>
+				<parameter name='automata' value='${automata}' />
+			</nodeTemplate>
+			<!-- OLD: <nodeTemplate template='AUTOMATA_CALL' regexp='(?&lt;automata&gt;\w+)\((?&lt;event&gt;\w+)\)' format='A#automata#(e#event#)' name='A${automata}e${event}'>
+				<parameter name='automata' value='${automata}' />
+				<parameter name='event' value='${event}' />
+			</nodeTemplate>-->
+
+		</nodes>
+
+		<descriptions>
+			<node template='EVENT' />
+			<node template='INPUT_VARIABLE' />
+			<node template='OUTPUT_ACTION' />
+		</descriptions>
+
+		<state>
+		    <!-- Описание секции "A: " -->
+			<stateMachineRef>
+				<node  template='AUTOMATA_CALL' />
+				<delimeter regexp=';' format=';' />
+				<!--<delimeter regexp=',' format=',' />-->
+				<space regexp='^A:|\s'/>
+			</stateMachineRef>
+
+		    <!-- Описание секции "z: " -->
+			<outputAction>
+				<node template='OUTPUT_ACTION' />
+				<node template='SIMPLE_OUTPUT_ACTION_IN_STATE' />
+				<delimeter regexp=';'  format=';'/>
+				<!--<delimeter regexp=';|,'  format=';'/>-->
+				<space regexp='^z:|\s'/>
+			</outputAction>
+		</state>
+
+		<transition>
+			<condition>
+				<node template='EVENT' />
+				<node template='OTHER_AUTOMATA_EVENT_EQUAL' />
+				<node template='OTHER_AUTOMATA_EVENT_NOTEQUAL' />
+				<node template='INPUT_VARIABLE' />
+				<binaryOperation regexp='&amp;{1,2}|\+' format='&amp;&amp;' type='AND'/>
+				<binaryOperation regexp='\|{1,2}' format='||' type='OR'/>
+
+   				<space regexp='\s|^(\s)*\*(\s)*$|^(\s)*1(\s)*$|^(\s)*ok(\s)*$'/>
+
+				<unaryOperation regexp='!' format='!' type='NOT'/>
+
+				<bracketStart regexp='\[|\(' format='(' />
+				<bracketEnd regexp='\]|\)' format=')'/>
+			</condition>
+			<outputAction>
+				<node template='OUTPUT_ACTION' />
+				<node  template='AUTOMATA_CALL' />
+
+				<space regexp='\s|^(\s)*-(\s)*$'/>
+
+				<delimeter regexp=';|,' format=';' />
+			</outputAction>
+		</transition>
+	</parsers>
+	<!-- Author: Kerner A.V. (aka heX)
+	2016 year. -->
+</configuration>
